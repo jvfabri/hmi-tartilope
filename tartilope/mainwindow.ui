@@ -1,0 +1,1329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>440</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>440</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>440</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Tartílope V2F</string>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <widget class="QStackedWidget" name="stackedWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>440</width>
+      <height>430</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="main">
+     <widget class="QGroupBox" name="move_axis_menu">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>130</y>
+        <width>221</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Move by Axis</string>
+      </property>
+      <widget class="QWidget" name="widget" native="true">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>200</width>
+         <height>91</height>
+        </rect>
+       </property>
+       <widget class="QLabel" name="label_6">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>11</y>
+          <width>60</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string> Move X</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_7">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>55</y>
+          <width>60</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string> Move Y</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="movex_button">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>10</y>
+          <width>50</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Ok</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="movey_button">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>55</y>
+          <width>50</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Ok</string>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="movex">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>10</y>
+          <width>80</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="frame">
+         <bool>true</bool>
+        </property>
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="minimum">
+         <number>-1000</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="movey">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>55</y>
+          <width>80</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="minimum">
+         <number>-1000</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="connect_sys">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>40</y>
+        <width>131</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="ButtonText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>78</red>
+            <green>154</green>
+            <blue>6</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="ButtonText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>78</red>
+            <green>154</green>
+            <blue>6</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>190</red>
+            <green>190</green>
+            <blue>190</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="ButtonText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>190</red>
+            <green>190</green>
+            <blue>190</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
+      <property name="toolTip">
+       <string>Connect / Disconnect the command system to the motor drivers </string>
+      </property>
+      <property name="text">
+       <string>Connect to TV2F</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>290</y>
+        <width>141</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>../Área de Trabalho/tcc/ino/Logo1-e1510947600609.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="linear_task_menu">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>270</y>
+        <width>240</width>
+        <height>95</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Linear Task</string>
+      </property>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>81</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Move To: </string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_5">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>60</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Speed:</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="sendTask">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>60</y>
+         <width>50</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Ok</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="speed_spin">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>60</y>
+         <width>90</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-300</number>
+       </property>
+       <property name="maximum">
+        <number>300</number>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="x_finish">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>30</y>
+         <width>70</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-1000</number>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="singleStep">
+        <number>0</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="y_finish">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>30</y>
+         <width>70</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-1000</number>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="singleStep">
+        <number>10</number>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="status_menu">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>4</y>
+        <width>280</width>
+        <height>117</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>Status: Idle</string>
+      </property>
+      <widget class="QPushButton" name="halt">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>40</y>
+         <width>71</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Stop the execution of any order and receive information of the movement</string>
+       </property>
+       <property name="text">
+        <string>Halt</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="info_check">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>0</y>
+         <width>81</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Periodically update the Status interface.</string>
+       </property>
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="position_label" native="true">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>91</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="position_layout">
+        <item>
+         <widget class="QLabel" name="xpos">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>X: xxxx</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="ypos">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Y: xxxx</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QPushButton" name="ledButton">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>70</y>
+         <width>41</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Turn the ESP32 LED On/Off</string>
+       </property>
+       <property name="text">
+        <string>LED</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="jog_original" native="true">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>120</y>
+        <width>191</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <widget class="QGroupBox" name="jog_menu">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>10</y>
+         <width>190</width>
+         <height>130</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Jog</string>
+       </property>
+       <widget class="QWidget" name="gridLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>91</width>
+          <height>91</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <property name="leftMargin">
+          <number>2</number>
+         </property>
+         <property name="topMargin">
+          <number>2</number>
+         </property>
+         <property name="rightMargin">
+          <number>2</number>
+         </property>
+         <property name="bottomMargin">
+          <number>2</number>
+         </property>
+         <property name="spacing">
+          <number>12</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QPushButton" name="xminus">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Move a fixed amount of steps in the negative direction o X</string>
+           </property>
+           <property name="text">
+            <string>x-</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="xplus">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Move a fixed amount of steps in the positive direction o X</string>
+           </property>
+           <property name="text">
+            <string>x+</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="yminus">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Move a fixed amount of steps in the negative direction o Y</string>
+           </property>
+           <property name="text">
+            <string>y-</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="yplus">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Move a fixed amount of steps in the positive direction o Y</string>
+           </property>
+           <property name="text">
+            <string>y+</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="verticalLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>30</y>
+          <width>71</width>
+          <height>91</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QSpinBox" name="jog_spin">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Number of steps to be executed for each click</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="settings_page">
+     <widget class="QWidget" name="info_placeholder" native="true">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>130</y>
+        <width>201</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <widget class="QPushButton" name="set_ref">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>110</y>
+         <width>131</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Set as Reference</string>
+       </property>
+      </widget>
+      <widget class="QFrame" name="frame_holder">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>120</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="placeholder_jog" native="true">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>10</y>
+        <width>191</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <widget class="QGroupBox" name="placeholder">
+       <property name="geometry">
+        <rect>
+         <x>-1</x>
+         <y>0</y>
+         <width>190</width>
+         <height>130</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Jog</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>201</width>
+        <height>201</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Default Settings</string>
+      </property>
+      <widget class="QWidget" name="formLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>181</width>
+         <height>131</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Steps/mm:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="steps_mm">
+          <property name="minimum">
+           <number>-10000</number>
+          </property>
+          <property name="maximum">
+           <number>100000</number>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>X axis speed:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="xvel_default">
+          <property name="suffix">
+           <string/>
+          </property>
+          <property name="prefix">
+           <string/>
+          </property>
+          <property name="minimum">
+           <number>-10000</number>
+          </property>
+          <property name="maximum">
+           <number>100000</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Y axis speed:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QSpinBox" name="yvel_default">
+          <property name="minimum">
+           <number>-1000</number>
+          </property>
+          <property name="maximum">
+           <number>100000</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Info period:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="info_period">
+          <property name="minimumSize">
+           <size>
+            <width>82</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="suffix">
+           <string>s</string>
+          </property>
+          <property name="decimals">
+           <number>1</number>
+          </property>
+          <property name="minimum">
+           <double>2.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>60.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.500000000000000</double>
+          </property>
+          <property name="value">
+           <double>10.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QPushButton" name="save_settings">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>170</y>
+         <width>51</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>290</y>
+        <width>141</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>../Área de Trabalho/tcc/ino/Logo1-e1510947600609.png</pixmap>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page">
+     <widget class="QGroupBox" name="groupBox_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>311</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Send Instructions in a File</string>
+      </property>
+      <widget class="QPushButton" name="send_file">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>30</y>
+         <width>81</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>send File</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="path_to_file">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>201</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="inputMask">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>Path to file</string>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>80</y>
+        <width>261</width>
+        <height>181</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Weaving</string>
+      </property>
+      <widget class="QWidget" name="widget_3" native="true">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>261</width>
+         <height>161</height>
+        </rect>
+       </property>
+       <widget class="QLabel" name="eta_weav">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>100</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>EFT: xxxx</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="wea_var2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>70</y>
+          <width>141</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="placeholderText">
+         <string>Amplitude</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="start_weav">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>10</y>
+          <width>71</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="wea_var1">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>40</y>
+          <width>141</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="placeholderText">
+         <string>Horizontal Velocity</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="wea_var3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>100</y>
+          <width>141</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>Frequency</string>
+        </property>
+       </widget>
+       <widget class="QProgressBar" name="weav_prog">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>130</y>
+          <width>231</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="value">
+         <number>24</number>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="stop_weav">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>40</y>
+          <width>71</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Stop</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="weav_type">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>141</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="currentText">
+         <string>Linear</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Linear</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sawtooth</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Triangle</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Ladder</string>
+         </property>
+        </item>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="linear_task_menu_2">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>240</y>
+        <width>221</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Linear Task</string>
+      </property>
+      <widget class="QLabel" name="label_11">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>41</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>From:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_12">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>60</y>
+         <width>31</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>To:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_13">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>90</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Speed:</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="sendTask_2">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>90</y>
+         <width>50</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Ok</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="speed_spin_2">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>90</y>
+         <width>91</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-300</number>
+       </property>
+       <property name="maximum">
+        <number>300</number>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="x_start_2">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>30</y>
+         <width>71</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>999999</number>
+       </property>
+       <property name="singleStep">
+        <number>10</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="y_start_2">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>30</y>
+         <width>71</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>999999</number>
+       </property>
+       <property name="singleStep">
+        <number>10</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="x_finish_2">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>60</y>
+         <width>71</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-1000</number>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="singleStep">
+        <number>0</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="y_finish_2">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>60</y>
+         <width>71</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-1000</number>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="singleStep">
+        <number>10</number>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>440</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="settings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="act_settings"/>
+   </widget>
+   <addaction name="settings"/>
+  </widget>
+  <action name="references">
+   <property name="text">
+    <string>References</string>
+   </property>
+  </action>
+  <action name="references_2">
+   <property name="text">
+    <string>References</string>
+   </property>
+  </action>
+  <action name="actionoi">
+   <property name="text">
+    <string>oi</string>
+   </property>
+  </action>
+  <action name="act_settings">
+   <property name="text">
+    <string>Preferences</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
