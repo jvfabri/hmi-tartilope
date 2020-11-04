@@ -25,11 +25,13 @@ MainWindow::MainWindow(QWidget *parent) :
     if(!readJSON("preferences.json")){
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setText("\nThe system has no saved preferences data!\n\nA new file will be created and the current\nposition will be set as origin.");
+        msgBox.setWindowTitle("Comando para Manipulador de Tocha de Soldagem");
+        msgBox.setText("\nNão existem preferências salvas!\n\nUm novo arquivo será criado e as configurações\n padrão serão utilizadas.");
         msgBox.exec();
         if(!writeJSON("preferences.json")){
             msgBox.setIcon(QMessageBox::Warning);
-            msgBox.setText("\nUnable to create a new preferences file!");
+            msgBox.setWindowTitle("Comando para Manipulador de Tocha de Soldagem");
+            msgBox.setText("\nNão foi possível salvar as configurações!");
             msgBox.exec();
         }
     }
@@ -40,7 +42,8 @@ MainWindow::~MainWindow()
     QMessageBox msgBox;
     int ret = QMessageBox::No;
     msgBox.setIcon(QMessageBox::Information);
-    msgBox.setText("Save current references and settings?");
+    msgBox.setWindowTitle("Comando para Manipulador de Tocha de Soldagem");
+    msgBox.setText("Salvar as configurações atuais?");
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox.setDefaultButton(QMessageBox::No);
     ret = msgBox.exec();
@@ -54,7 +57,8 @@ bool MainWindow::not_idle_warning(){
     if (!ui->status_menu->title().contains("Ocioso") && !ui->status_menu->title().contains("Finalizado") && !ui->status_menu->title().contains("Interrompido")){
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setText("Machine is busy, cannot send a new task.");
+        msgBox.setWindowTitle("Comando para Manipulador de Tocha de Soldagem");
+        msgBox.setText("Máquina está ocupada, não é possível enviar o comando.");
         msgBox.exec();
         return false;
     }
@@ -71,14 +75,15 @@ bool MainWindow::readJSON(QString name){
     QMessageBox msgBox;
     int ret = QMessageBox::No;
     msgBox.setIcon(QMessageBox::Information);
-    msgBox.setText("There are previously saved preferences, use them?");
+    msgBox.setWindowTitle("Comando para Manipulador de Tocha de Soldagem");
+    msgBox.setText("Existem configurações previamente salvas, \ndeseja utilizá-las?");
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox.setDefaultButton(QMessageBox::No);
     ret = msgBox.exec();
 
     if(ret == QMessageBox::No){
         QMessageBox msgBox;
-        msgBox.setText("Current position set as origin.\nSettings set to default.");
+        msgBox.setText("Posição atual marcada como origem.\nConfigurações modificadas para os valores padrão.");
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.exec();
         _xpos = 0;
@@ -132,7 +137,7 @@ bool MainWindow::writeJSON(QString name){
     QFile saveFile(name);
 
    if (!saveFile.open(QIODevice::WriteOnly)) {
-       qWarning("Couldn't open save file.");
+       qWarning("Não foi possível abrir o arquivo.");
        return false;
    }
 
@@ -185,6 +190,7 @@ void MainWindow::on_send_file_clicked()
     if(!file->open(QIODevice::ReadOnly)){
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setWindowTitle("Comando para Manipulador de Tocha de Soldagem");
         msgBox.setText("This file does not exist or the path is wrong!\n\nTry clicking the Send File button with the text box empty\nor setting the absolute path to the file.");
         msgBox.exec();
         return;
@@ -425,7 +431,8 @@ void MainWindow::on_save_settings_clicked()
     QMessageBox msgBox;
     int ret = QMessageBox::No;
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setText("Existing preferences file will be overwritten and configuration will be sent to the machine.\nContinue?");
+    msgBox.setWindowTitle("Comando para Manipulador de Tocha de Soldagem");
+    msgBox.setText("Arquivo existente será sobrescrito e a máquina será configurada.\nContinuar?");
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox.setDefaultButton(QMessageBox::No);
     ret = msgBox.exec();

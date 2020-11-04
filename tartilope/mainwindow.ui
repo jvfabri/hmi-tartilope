@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Welding Task Command System</string>
+   <string>Comando para Manipulador de Tocha de Soldagem</string>
   </property>
   <property name="unifiedTitleAndToolBarOnMac">
    <bool>false</bool>
@@ -682,7 +682,7 @@ Emergência</string>
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>261</width>
+        <width>271</width>
         <height>261</height>
        </rect>
       </property>
@@ -694,7 +694,7 @@ Emergência</string>
         <rect>
          <x>10</x>
          <y>30</y>
-         <width>241</width>
+         <width>249</width>
          <height>191</height>
         </rect>
        </property>
@@ -929,11 +929,14 @@ Emergência</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>280</x>
+        <x>290</x>
         <y>10</y>
         <width>141</width>
         <height>141</height>
        </rect>
+      </property>
+      <property name="title">
+       <string>Posição Atual</string>
       </property>
       <widget class="QPushButton" name="set_ref">
        <property name="geometry">
