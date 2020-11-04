@@ -34,7 +34,7 @@ public:
     ~MainWindow();
     int _xpos, _current_speed_x,  _xvel_default;
     int _ypos, _current_speed_y,  _yvel_default;
-    int _steps_per_mm;
+    int _steps_per_mm_x, _steps_per_mm_y;
     bool _is_on;
 
 private slots:
@@ -53,13 +53,15 @@ private slots:
     void on_movex_button_clicked();
     void on_movey_button_clicked();
     void timer_info_update();
-    void change_page();
-    void on_steps_mm_valueChanged(int arg1);
+    void change_page_set();
+    void change_page_com();
     void on_xvel_default_valueChanged(int arg1);
     void on_yvel_default_valueChanged(int arg1);
     void on_save_settings_clicked();
     void on_info_period_valueChanged(double arg1);
     void on_set_ref_clicked();
+    void on_steps_mm_y_valueChanged(int arg1);
+    void on_steps_mm_x_valueChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;
@@ -67,7 +69,7 @@ private:
     void send_move_command(int x, int y, int xv, int yv);
     bool readJSON(QString name);
     bool writeJSON(QString name);
-    void not_idle_warning();
+    bool not_idle_warning();
 };
 
 #endif // MAINWINDOW_H

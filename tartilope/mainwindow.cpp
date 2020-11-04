@@ -13,12 +13,14 @@ MainWindow::MainWindow(QWidget *parent) :
     _current_speed_y = 100;
     _xvel_default = 100;
     _yvel_default = 100;
-    _steps_per_mm = 1;
+    _steps_per_mm_x = 1;
+    _steps_per_mm_y = 1;
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(timer_info_update()));
     timer->setInterval(1000*ui->info_period->value());
-    connect(ui->act_settings,SIGNAL(triggered(bool)),this,SLOT(change_page()));
-    ui->placeholder->deleteLater();
+    connect(ui->act_settings,SIGNAL(triggered(bool)),this,SLOT(change_page_set()));
+    connect(ui->act_simplified,SIGNAL(triggered(bool)),this,SLOT(change_page_com()));
+
     ui->frame_holder->deleteLater();
     if(!readJSON("preferences.json")){
         QMessageBox msgBox;
@@ -48,14 +50,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::not_idle_warning(){
-    if (!ui->status_menu->title().contains("Idle") && !ui->status_menu->title().contains("Done") && !ui->status_menu->title().contains("Halted")){
+bool MainWindow::not_idle_warning(){
+    if (!ui->status_menu->title().contains("Ocioso") && !ui->status_menu->title().contains("Finalizado") && !ui->status_menu->title().contains("Interrompido")){
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
         msgBox.setText("Machine is busy, cannot send a new task.");
         msgBox.exec();
-        return;
+        return false;
     }
+    return true;
 }
 
 bool MainWindow::readJSON(QString name){
@@ -84,7 +87,8 @@ bool MainWindow::readJSON(QString name){
         _current_speed_y = 100;
         _xvel_default = 100;
         _yvel_default = 100;
-        _steps_per_mm = 1;
+        _steps_per_mm_x = 1;
+        _steps_per_mm_y = 1;
     } else if (ret == QMessageBox::Yes){
         QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
         QJsonObject json = loadDoc.object();
@@ -104,13 +108,19 @@ bool MainWindow::readJSON(QString name){
             _yvel_default = json["yvel_default"].toInt();
             ui->yvel_default->setValue(_yvel_default);
         }
-        if(json.contains("steps_per_mm") && json["steps_per_mm"].isDouble()) {
-            _steps_per_mm = json["steps_per_mm"].toInt();
-            ui->steps_mm->setValue(_steps_per_mm);
+        if(json.contains("steps_per_mmx") && json["steps_per_mmx"].isDouble()) {
+            _steps_per_mm_x = json["steps_per_mmx"].toInt();
+            ui->steps_mm_x->setValue(_steps_per_mm_x);
+        }
+        if(json.contains("steps_per_mmy") && json["steps_per_mmy"].isDouble()) {
+            _steps_per_mm_y = json["steps_per_mmy"].toInt();
+            ui->steps_mm_y->setValue(_steps_per_mm_y);
         }
         if(json.contains("info_period") && json["info_period"].isDouble()) {
-            qDebug() << ui->info_period->value();
             ui->info_period->setValue(json["info_period"].toDouble());
+        }
+        if(json.contains("jogsteps") && json["jogsteps"].isDouble()) {
+            ui->jogsteps->setValue(json["jogsteps"].toDouble());
         }
         _current_speed_x = _xvel_default;
         _current_speed_y = _yvel_default;
@@ -131,9 +141,20 @@ bool MainWindow::writeJSON(QString name){
    saveDoc["ypos"] = _ypos ;
    saveDoc["xvel_default"] = _xvel_default;
    saveDoc["yvel_default"] = _yvel_default;
-   saveDoc["steps_per_mm"] = _steps_per_mm;
+   saveDoc["steps_per_mmx"] = _steps_per_mm_x;
+   saveDoc["steps_per_mmy"] = _steps_per_mm_y;
    saveDoc["info_period"] = ui->info_period->value();
+   saveDoc["jogsteps"] = ui->jogsteps->value();
+
    saveFile.write(QJsonDocument(saveDoc).toJson());
+   if (!not_idle_warning()) return true;
+   QString data = "xjogsteps="+QString::number(ui->jogsteps->value()*ui->steps_mm_x->value())+"&yjogsteps="+QString::number(ui->jogsteps->value()*ui->steps_mm_y->value())+"&xv="+QString::number(ui->xvel_default->value())+"&yv="+QString::number(ui->yvel_default->value());
+   QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
+   connect(mgr,SIGNAL(finished(QNetworkReply*)),this,SLOT(onfinish(QNetworkReply*)));
+   connect(mgr,SIGNAL(finished(QNetworkReply*)),mgr,SLOT(deleteLater()));
+   QNetworkRequest request(QUrl("http://192.168.4.1/CONFIG"));
+   request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
+   mgr->post(request,data.toLocal8Bit());
 
    return true;
 }
@@ -146,6 +167,7 @@ void MainWindow::send_move_command(int x, int y, int xv, int yv){
     QNetworkRequest request(QUrl("http://192.168.4.1/COMMAND"));
     request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
     mgr->post(request,data.toLocal8Bit());
+    qDebug() << data;
     timer->start();
 }
 
@@ -214,19 +236,25 @@ void MainWindow::onfinishINFO(QNetworkReply *rep)
     QString bts = rep->readAll(), xpos = "", ypos="";
     int x,y;
     xpos = bts.mid(bts.indexOf("x=")+2,bts.indexOf("&",bts.indexOf("x=")+1)-bts.indexOf("x=")-2);
-    x = (_current_speed_x>=0) ? (_xpos+xpos.toInt()) : (_xpos-xpos.toInt());
+    x = xpos.toInt()/ui->steps_mm_x->value();
     ui->xpos->setText("X: "+QString::number(x));
     ypos = bts.mid(bts.indexOf("y=")+2,bts.indexOf("&",bts.indexOf("y=")+1)-bts.indexOf("y=")-2);
-    y = (_current_speed_y>=0) ? (_ypos+ypos.toInt()) : (_ypos-ypos.toInt());
+    y = ypos.toInt()/ui->steps_mm_y->value();
     ui->ypos->setText("Y: "+QString::number(y));
     QString status = bts.mid(bts.indexOf("&",bts.indexOf("y=")+1)+1);
-    qDebug() << status;
+    qDebug() << status << xpos <<" - "<<ypos;
     if (status=="Done\n" || status=="Halted\n"){
         _xpos = x;
         _ypos = y;
-        timer->stop();
     }
-    ui->status_menu->setTitle("Status: "+status);
+    if (status=="Running\n")
+        ui->status_menu->setTitle("Status: Movendo");
+    else if (status=="Done\n")
+        ui->status_menu->setTitle("Status: Finalizado");
+    else if (status=="Halted\n")
+        ui->status_menu->setTitle("Status: Interrompido");
+    else
+        ui->status_menu->setTitle("Status: Desconhecido");
 }
 
 void MainWindow::onfinish(QNetworkReply *rep){   
@@ -236,11 +264,11 @@ void MainWindow::onfinish(QNetworkReply *rep){
 
 void MainWindow::onfinish_sys(QNetworkReply *rep){
     if(_is_on){
-        ui->connect_sys->setText("Connect to TV2F");
+        ui->connect_sys->setText("Conectar \naos Motores");
         ui->connect_sys->setStyleSheet("QPushButton {color : green}");
         _is_on = false;
     } else {
-        ui->connect_sys->setText("Disconnect");
+        ui->connect_sys->setText("Desconectar");
         ui->connect_sys->setStyleSheet("QPushButton {color : red}");
         _is_on = true;
     }
@@ -261,7 +289,6 @@ void MainWindow::timer_info_update()
         QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
         connect(mgr,SIGNAL(finished(QNetworkReply*)),this,SLOT(onfinishINFO(QNetworkReply*)));
         connect(mgr,SIGNAL(finished(QNetworkReply*)),mgr,SLOT(deleteLater()));
-
         mgr->get(QNetworkRequest(QUrl("http://192.168.4.1/INFO")));
     }
 }
@@ -277,38 +304,35 @@ void MainWindow::on_connect_sys_clicked(){
     }
 }
 
-void MainWindow::change_page(){
+void MainWindow::change_page_com(){
     if (ui->stackedWidget->currentIndex()==1){
-        ui->jog_menu->setParent(ui->jog_original);
         ui->position_label->setParent(ui->status_menu);
         ui->stackedWidget->setCurrentIndex(0);
-        ui->act_settings->setText("Preferences");
-        ui->act_settings->setIconText("Preferences");
-    }else{
-        ui->jog_menu->setParent(ui->placeholder_jog);
-        ui->position_label->setParent(ui->info_placeholder);
-        ui->stackedWidget->setCurrentIndex(1);
-        ui->act_settings->setText("Commands");
-        ui->act_settings->setIconText("Commands");
     }
 }
 
+void MainWindow::change_page_set(){
+    if (ui->stackedWidget->currentIndex()==0){
+        ui->position_label->setParent(ui->info_placeholder);
+        ui->stackedWidget->setCurrentIndex(1);
+    }
+}
 void MainWindow::on_sendTask_clicked(){
-    not_idle_warning();
-
-    int xsteps=0,ysteps=0,xvel=0,yvel=0;
-    qDebug() << ui->x_finish->value() <<'\n' << _xpos;
-    xsteps = ui->x_finish->value() - _xpos;
-    ysteps = ui->y_finish->value() - _ypos;
-    if(xsteps!=0 || ysteps!=0) xvel = ui->speed_spin->value() * (xsteps) / sqrt(pow(xsteps,2) + pow(ysteps,2));
-    if(xsteps!=0 || ysteps!=0) yvel = ui->speed_spin->value() * (ysteps) / sqrt(pow(xsteps,2) + pow(ysteps,2));
-    if(xvel==0) xvel=100;
-    if(yvel==0) yvel=100;
+    if (!not_idle_warning()) return;
+    timer->stop();
+    int xsteps=0,ysteps=0;
+    float xvel=0,yvel=0;
+    xsteps = ui->steps_mm_x->value()*(ui->x_finish->value() - _xpos);
+    ysteps = ui->steps_mm_y->value()*(ui->y_finish->value() - _ypos);
+    if(xsteps!=0 || ysteps!=0) xvel = floor(ui->speed_spin->value() * (xsteps) / sqrt(pow(xsteps,2) + pow(ysteps,2)));
+    if(xsteps!=0 || ysteps!=0) yvel = floor(ui->speed_spin->value() * (ysteps) / sqrt(pow(xsteps,2) + pow(ysteps,2)));
+    if(xvel==0) xvel=ui->xvel_default->value();
+    if(yvel==0) yvel=ui->yvel_default->value();
     xsteps = abs(xsteps);
     ysteps = abs(ysteps);
     _current_speed_x = xvel;
     _current_speed_y = yvel;
-    send_move_command(xsteps, ysteps, xvel, yvel);
+    send_move_command(xsteps, ysteps, (int) xvel, (int) yvel);
     timer->start();
 }
 
@@ -328,6 +352,7 @@ void MainWindow::on_xplus_clicked()
     connect(mgr,SIGNAL(finished(QNetworkReply*)),mgr,SLOT(deleteLater()));
 
     mgr->post(QNetworkRequest(QUrl("http://192.168.4.1/JOGX+")),"");
+    _current_speed_x = 100;
     timer->start();
 }
 
@@ -338,6 +363,7 @@ void MainWindow::on_xminus_clicked()
     connect(mgr,SIGNAL(finished(QNetworkReply*)),mgr,SLOT(deleteLater()));
 
     mgr->post(QNetworkRequest(QUrl("http://192.168.4.1/JOGX-")),"");
+    _current_speed_x = -100;
     timer->start();
 }
 
@@ -348,6 +374,7 @@ void MainWindow::on_yplus_clicked()
     connect(mgr,SIGNAL(finished(QNetworkReply*)),mgr,SLOT(deleteLater()));
 
     mgr->post(QNetworkRequest(QUrl("http://192.168.4.1/JOGY+")),"");
+    _current_speed_y = 100;
     timer->start();
 }
 
@@ -358,13 +385,10 @@ void MainWindow::on_yminus_clicked()
     connect(mgr,SIGNAL(finished(QNetworkReply*)),mgr,SLOT(deleteLater()));
 
     mgr->post(QNetworkRequest(QUrl("http://192.168.4.1/JOGY-")),"");
+    _current_speed_y = -100;
     timer->start();
 }
 
-void MainWindow::on_steps_mm_valueChanged(int arg1)
-{
-    _steps_per_mm = arg1;
-}
 
 void MainWindow::on_xvel_default_valueChanged(int arg1)
 {
@@ -378,18 +402,19 @@ void MainWindow::on_yvel_default_valueChanged(int arg1)
 
 void MainWindow::on_movex_button_clicked()
 {
-    not_idle_warning();
-    int x = abs(ui->movex->value())*_steps_per_mm;
+    if (!not_idle_warning()) return;
+    timer->stop();
+    int x = abs(ui->movex->value())*_steps_per_mm_x;
     _current_speed_x = (ui->movex->value()>=0) ? (_xvel_default): (-_xvel_default);
-    qDebug() << x <<'\n' << _current_speed_x;
     send_move_command(x, 0, _current_speed_x , _yvel_default);
     timer->start();
 }
 
 void MainWindow::on_movey_button_clicked()
 {
-    not_idle_warning();
-    int y = abs(ui->movey->value())*_steps_per_mm;
+    if (!not_idle_warning()) return;
+    timer->stop();
+    int y = abs(ui->movey->value())*_steps_per_mm_y;
     _current_speed_y = (ui->movey->value()>=0) ? (_yvel_default): (-_yvel_default);
     send_move_command(0, y, _xvel_default, _current_speed_y);
     timer->start();
@@ -400,7 +425,7 @@ void MainWindow::on_save_settings_clicked()
     QMessageBox msgBox;
     int ret = QMessageBox::No;
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setText("Existing preferences file will be overwritten.\nContinue?");
+    msgBox.setText("Existing preferences file will be overwritten and configuration will be sent to the machine.\nContinue?");
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox.setDefaultButton(QMessageBox::No);
     ret = msgBox.exec();
@@ -420,4 +445,20 @@ void MainWindow::on_set_ref_clicked()
     _ypos = 0;
     ui->xpos->setText("X: "+QString::number(_xpos));
     ui->ypos->setText("Y: "+QString::number(_ypos));
+    QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
+    connect(mgr,SIGNAL(finished(QNetworkReply*)),this,SLOT(onfinish(QNetworkReply*)));
+    connect(mgr,SIGNAL(finished(QNetworkReply*)),mgr,SLOT(deleteLater()));
+    mgr->post(QNetworkRequest(QUrl("http://192.168.4.1/ORIGIN")),"");
+
+}
+
+
+void MainWindow::on_steps_mm_y_valueChanged(int arg1)
+{
+    _steps_per_mm_y = arg1;
+}
+
+void MainWindow::on_steps_mm_x_valueChanged(int arg1)
+{
+    _steps_per_mm_x = arg1;
 }
