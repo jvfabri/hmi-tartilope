@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->setInterval(1000*ui->info_period->value());
     connect(ui->act_settings,SIGNAL(triggered(bool)),this,SLOT(change_page_set()));
     connect(ui->act_simplified,SIGNAL(triggered(bool)),this,SLOT(change_page_com()));
+    connect(ui->act_help,SIGNAL(triggered(bool)),this,SLOT(change_page_help()));
 
     ui->frame_holder->deleteLater();
     if(!readJSON("preferences.json")){
@@ -165,7 +166,7 @@ bool MainWindow::writeJSON(QString name){
 }
 
 void MainWindow::send_move_command(int x, int y, int xv, int yv){
-    QString data = "x="+QString::number(x)+"&y="+QString::number(y)+"&xv="+QString::number(xv)+"&yv="+QString::number(yv);
+    QString data = "x="+QString::number(x)+"&y="+QString::number(y)+"&xv="+QString::number((xv*ui->steps_mm_x->value()*6))+"&yv="+QString::number((yv*ui->steps_mm_y->value()*6));
     QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
     connect(mgr,SIGNAL(finished(QNetworkReply*)),this,SLOT(onfinish(QNetworkReply*)));
     connect(mgr,SIGNAL(finished(QNetworkReply*)),mgr,SLOT(deleteLater()));
@@ -174,66 +175,6 @@ void MainWindow::send_move_command(int x, int y, int xv, int yv){
     mgr->post(request,data.toLocal8Bit());
     qDebug() << data;
     timer->start();
-}
-
-void MainWindow::on_send_file_clicked()
-{
-    QString fileName;
-    if (ui->path_to_file->text().isEmpty())
-        fileName = QFileDialog::getOpenFileName(this,
-            tr("Open File"), "..", tr("Text files (*.txt);;Images (*.png *.xpm *.jpg);;GCode files (*.g)"));
-    else
-        fileName = ui->path_to_file->text();
-
-    QFile *file = new QFile(fileName);
-    int ret = QMessageBox::Cancel;
-    if(!file->open(QIODevice::ReadOnly)){
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setWindowTitle("Comando para Manipulador de Tocha de Soldagem");
-        msgBox.setText("This file does not exist or the path is wrong!\n\nTry clicking the Send File button with the text box empty\nor setting the absolute path to the file.");
-        msgBox.exec();
-        return;
-    } else {
-        QMessageBox msgBox;
-        msgBox.setText("You are trying to send "+fileName+".");
-        msgBox.setInformativeText("Send file to Tartilope V2F?");
-        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-        msgBox.setDefaultButton(QMessageBox::Ok);
-        ret = msgBox.exec();
-    }
-    if(ret == QMessageBox::Cancel)
-        return;
-
-    QByteArray line;
-    while (!file->atEnd()) {
-            line.append( file->readLine());
-    }
-
-    QUrl url("http://192.168.4.1/uploaded");
-    QNetworkRequest request(url);
-    QNetworkAccessManager * manager = new QNetworkAccessManager(this);
-
-    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-    multiPart->setBoundary("----WebKitFormBoundaryANqbA0PvofyLBDnK");
-    QHttpPart textPart, textPart2;
-    
-    textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"MAX_FILE_SIZE\""));
-    textPart.setBody("100000");
-    multiPart->append(textPart);
-
-    textPart2.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"uploadedfile\"; filename=\"circle.txt\""));
-    textPart2.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
-    textPart2.setBody(line);
-    multiPart->append(textPart2);
-
-    QNetworkReply *reply = manager->post(request,multiPart);
-    multiPart->setParent(reply);
-    file->setParent(multiPart);
-
-    QMessageBox msgBox;
-    msgBox.setText("File Sent!");
-    msgBox.exec();
 }
 
 void MainWindow::onfinishINFO(QNetworkReply *rep)
@@ -273,10 +214,16 @@ void MainWindow::onfinish_sys(QNetworkReply *rep){
         ui->connect_sys->setText("Conectar \naos Motores");
         ui->connect_sys->setStyleSheet("QPushButton {color : green}");
         _is_on = false;
+        ui->move_axis_menu->setEnabled(false);
+        ui->jog_menu->setEnabled(false);
+        ui->linear_task_menu->setEnabled(false);
     } else {
         ui->connect_sys->setText("Desconectar");
         ui->connect_sys->setStyleSheet("QPushButton {color : red}");
         _is_on = true;
+        ui->move_axis_menu->setEnabled(true);
+        ui->jog_menu->setEnabled(true);
+        ui->linear_task_menu->setEnabled(true);
     }
 }
 
@@ -311,18 +258,23 @@ void MainWindow::on_connect_sys_clicked(){
 }
 
 void MainWindow::change_page_com(){
-    if (ui->stackedWidget->currentIndex()==1){
+    if (ui->stackedWidget->currentIndex()==1 || ui->stackedWidget->currentIndex()==2){
         ui->position_label->setParent(ui->status_menu);
         ui->stackedWidget->setCurrentIndex(0);
     }
 }
 
 void MainWindow::change_page_set(){
-    if (ui->stackedWidget->currentIndex()==0){
+    if (ui->stackedWidget->currentIndex()==0 || ui->stackedWidget->currentIndex()==2){
         ui->position_label->setParent(ui->info_placeholder);
         ui->stackedWidget->setCurrentIndex(1);
     }
 }
+
+void MainWindow::change_page_help(){
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
 void MainWindow::on_sendTask_clicked(){
     if (!not_idle_warning()) return;
     timer->stop();
@@ -340,15 +292,6 @@ void MainWindow::on_sendTask_clicked(){
     _current_speed_y = yvel;
     send_move_command(xsteps, ysteps, (int) xvel, (int) yvel);
     timer->start();
-}
-
-void MainWindow::on_ledButton_clicked()
-{
-    QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
-    connect(mgr,SIGNAL(finished(QNetworkReply*)),this,SLOT(onfinish(QNetworkReply*)));
-    connect(mgr,SIGNAL(finished(QNetworkReply*)),mgr,SLOT(deleteLater()));
-
-    mgr->post(QNetworkRequest(QUrl("http://192.168.4.1/LED")),"");
 }
 
 void MainWindow::on_xplus_clicked()
